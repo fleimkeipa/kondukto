@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/fleimkeipa/kondukto/utils"
@@ -12,20 +11,18 @@ import (
 func ScanFunc(url string) (string, error) {
 	utils.Info("git clone " + url)
 
-	_, err := git.PlainClone("/deneme/src", false, &git.CloneOptions{
+	_, err := git.PlainClone("../../tmp/src", false, &git.CloneOptions{
 		URL:      url,
 		Progress: os.Stdout,
 	})
-	fmt.Println("cp0")
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("cp1")
+
 	uuid, err := uuid.NewUUID()
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("cp2")
 
 	return uuid.String(), nil
 }
