@@ -31,6 +31,9 @@ func (r *Receiver) Handler(c echo.Context) error {
 	if err := utils.ImageBuild(r.Cli); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
+	if err := utils.RunContainer(r.Cli); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
 
 	return c.JSON(http.StatusOK, "id")
 }
