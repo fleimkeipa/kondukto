@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"os"
 
 	"github.com/docker/docker/client"
 	"github.com/fleimkeipa/kondukto/cmd/handlers"
@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	// fmt.Println("docker_host", os.Getenv("DOCKER_HOST"))
 	docker, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		panic(err)
@@ -30,9 +31,15 @@ func main() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	//e.Use(utils.Logger())
 
 	e.POST("/newscan", receiver.NewScan)
 	e.GET("/scan/:scan_id", receiver.GetScan)
-	log.Fatal(e.Start(":8080"))
+	e.GET("/scans", receiver.GetScanAll)
+
+	httpPort := os.Getenv("HTTP_PORT")
+	if httpPort == "" {
+		httpPort = "8080"
+	}
+
+	e.Logger.Fatal(e.Start(":" + httpPort))
 }

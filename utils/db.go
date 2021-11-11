@@ -13,11 +13,12 @@ import (
 )
 
 func Connect() (*mongo.Client, error) {
+
 	// mongo.Connect return mongo.Client method
 	client, err := mongo.Connect(
 		context.TODO(),
-		// options.Client().ApplyURI("mongodb+srv://"+os.Getenv("DBUSERNAME")+":"+os.Getenv("DBPASSWORD")+"@cluster0.4lioy.mongodb.net/eight-sup?retryWrites=true&w=majority"),
-		options.Client().ApplyURI("mongodb://127.0.0.1:27017"),
+		options.Client().ApplyURI("mongodb+srv://fleimkeipa:sifre123@cluster0.4lioy.mongodb.net/kondukto?retryWrites=true&w=majority"),
+		// options.Client().ApplyURI("mongodb://127.0.0.1:27017"),
 	)
 	if err != nil {
 		return nil, err

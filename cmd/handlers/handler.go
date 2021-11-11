@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -59,9 +60,30 @@ func (r *Receiver) GetScan(c echo.Context) error {
 		"_id": id,
 	}).Decode(&result)
 
+	if r := utils.CheckSeverity(result); r != "" {
+		return c.JSON(http.StatusOK, map[string]interface{}{"result": r})
+	}
+
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, result)
+}
+
+func (r *Receiver) GetScanAll(c echo.Context) error {
+
+	coll := r.Mongo.Database("kondukto").Collection("results")
+
+	filterCursor, err := coll.Find(context.Background(), map[string]interface{}{})
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	var filtered []map[string]interface{}
+	if err = filterCursor.All(context.TODO(), &filtered); err != nil {
+		return errors.New("error from ReturnAll/filterCursor.All and error code= " + err.Error())
+	}
+
+	return c.JSON(http.StatusOK, filtered)
 }
