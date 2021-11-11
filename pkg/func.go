@@ -8,6 +8,17 @@ import (
 )
 
 func ScanFunc(url string) (*git.Repository, error) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+
+	//delete repository and results.json
+	err = os.RemoveAll(cwd + "/tmp/src")
+	if err != nil {
+		return nil, err
+	}
+
 	utils.Info("git clone " + url)
 
 	repo, err := git.PlainClone("./tmp/src", false, &git.CloneOptions{

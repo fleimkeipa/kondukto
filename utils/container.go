@@ -32,7 +32,7 @@ func RunContainer(cli *client.Client, repo *git.Repository) error {
 	// docker run --rm -v ${PWD}:/code opensorcery/bandit -r /code
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image:      "opensorcery/bandit",
-		Cmd:        []string{"-r", workingDir, "-f", "json", "-o", "results.json"},
+		Cmd:        []string{"-r", workingDir, "-f", "json", "-o", "result.json"},
 		WorkingDir: workingDir,
 	}, &container.HostConfig{
 		AutoRemove: true,
@@ -59,12 +59,6 @@ func RunContainer(cli *client.Client, repo *git.Repository) error {
 			return err
 		}
 	case <-statusCh:
-	}
-
-	//delete repository
-	err = os.RemoveAll(cwd + "/tmp/src")
-	if err != nil {
-		return err
 	}
 
 	return nil

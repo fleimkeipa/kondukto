@@ -10,17 +10,24 @@ import (
 )
 
 func main() {
-	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	docker, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		panic(err)
 	}
+
+	mongo, err := utils.Connect()
+	if err != nil {
+		panic(err)
+	}
+
 	receiver := handlers.Receiver{
-		Cli: cli,
+		Docker: docker,
+		Mongo:  mongo,
 	}
 
 	e := echo.New()
 	e.Use(utils.Logger())
-	e.POST("/newscan", receiver.Handler)
+	e.POST("/newscan", receiver.NewScan)
 
 	log.Fatal(e.Start(":8080"))
 }
