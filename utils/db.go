@@ -22,9 +22,11 @@ func Connect() (*mongo.Client, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	if err := client.Ping(context.TODO(), readpref.Primary()); err != nil {
 		return nil, err
 	}
+
 	fmt.Println("connection is ready")
 	return client, nil
 }

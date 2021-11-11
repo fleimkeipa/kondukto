@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"time"
@@ -46,4 +47,21 @@ func (r *Receiver) NewScan(c echo.Context) error {
 	fmt.Println("insertDB", time.Since(start))
 
 	return c.JSON(http.StatusOK, map[string]interface{}{"scan_id": result["_id"].(primitive.ObjectID)})
+}
+
+func (r *Receiver) GetScan(c echo.Context) error {
+	id, _ := primitive.ObjectIDFromHex(c.Param("scan_id"))
+
+	coll := r.Mongo.Database("kondukto").Collection("results")
+
+	var result map[string]interface{}
+	err := coll.FindOne(context.Background(), map[string]interface{}{
+		"_id": id,
+	}).Decode(&result)
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, result)
 }
