@@ -7,17 +7,21 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 func Connect() (*mongo.Client, error) {
-
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println(err)
+	}
 	// mongo.Connect return mongo.Client method
 	client, err := mongo.Connect(
 		context.TODO(),
-		options.Client().ApplyURI("mongodb+srv://fleimkeipa:sifre123@cluster0.4lioy.mongodb.net/kondukto?retryWrites=true&w=majority"),
+		options.Client().ApplyURI("mongodb+srv://"+os.Getenv("DBUSERNAME")+":"+os.Getenv("DBPASSWORD")+"@cluster0.4lioy.mongodb.net/"+os.Getenv("DBNAME")+"?retryWrites=true&w=majority"),
 		// options.Client().ApplyURI("mongodb://127.0.0.1:27017"),
 	)
 	if err != nil {
