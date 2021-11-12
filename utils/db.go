@@ -18,6 +18,7 @@ func Connect() (*mongo.Client, error) {
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	// mongo.Connect return mongo.Client method
 	client, err := mongo.Connect(
 		context.TODO(),
